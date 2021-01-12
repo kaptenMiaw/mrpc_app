@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search_ic"
+        android:title="@string/search"
+        app:showAsAction="always"
+        android:icon="@drawable/search_ic"/>
+    <item
+        android:id="@+id/sortlist_ic"
+        android:title="@string/sort_list"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/sort_ic"/>
+    <group>
+        <item
+            android:id="@+id/cekupdate_ic"
+            android:title="@string/cek_update"/>
+        <item
+            android:id="@+id/backup_ic"
+            android:title="@string/backup_data"/>
+        <item
+            android:id="@+id/abput_ic"
+            android:title="@string/tentang_aplikasi"/>
+        <item
+            android:id="@+id/moreapps_ic"
+            android:title="@string/aplikasi_lainnya"/>
+        <item
+            android:id="@+id/donate_ic"
+            android:title="@string/donasi"/>
+    </group>
+
+</menu>
