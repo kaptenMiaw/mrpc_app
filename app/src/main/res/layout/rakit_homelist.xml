@@ -14,8 +14,12 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:focusable="true"
+        app:borderWidth="0dp"
+        android:backgroundTint="#0067FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:srcCompat="@color/white" />
+        app:fabSize="normal"
+        tools:srcCompat="@drawable/add_ic"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
