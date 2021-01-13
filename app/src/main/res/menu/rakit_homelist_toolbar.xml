@@ -12,7 +12,7 @@
         android:title="@string/sort_list"
         app:showAsAction="ifRoom"
         android:icon="@drawable/sort_ic"/>
-    <group>
+
         <item
             android:id="@+id/cekupdate_ic"
             android:title="@string/cek_update"/>
@@ -28,6 +28,5 @@
         <item
             android:id="@+id/donate_ic"
             android:title="@string/donasi"/>
-    </group>
 
 </menu>
