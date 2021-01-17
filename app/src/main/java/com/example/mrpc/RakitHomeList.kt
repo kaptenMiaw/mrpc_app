@@ -7,22 +7,27 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mrpc.rakitlist.EditActivity
+import com.example.mrpc.rakitlist.NoteAdapter
 import com.example.mrpc.room.NoteDB
 import kotlinx.android.synthetic.main.rakit_homelist.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RakitHomeList: AppCompatActivity(){
 
     val db by lazy { NoteDB(this) }
+    lateinit var noteAdapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.rakit_homelist)
 
         setupListener()
+        setupRecyclerView()
     }
 
     override fun onStart() {
@@ -30,6 +35,9 @@ class RakitHomeList: AppCompatActivity(){
         CoroutineScope(Dispatchers.IO).launch {
             val note = db.noteDao().getNote()
             Log.d("RakitHomeList","dbResponse: $note")
+            withContext(Dispatchers.Main){
+                noteAdapter.setData(note)
+            }
         }
     }
 
@@ -39,12 +47,20 @@ class RakitHomeList: AppCompatActivity(){
             }
         }
 
+        private fun setupRecyclerView() {
+            noteAdapter = NoteAdapter(arrayListOf())
+            list_note.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = noteAdapter
+            }
+        }
+
         //for toolbar
         override fun onCreateOptionsMenu(menu: Menu?): Boolean {
             menuInflater.inflate(R.menu.rakit_homelist_toolbar, menu)
             return true
         }
-
+        //for toolar item
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.search_ic -> Toast.makeText(this, "Search Clicked !", Toast.LENGTH_SHORT)
