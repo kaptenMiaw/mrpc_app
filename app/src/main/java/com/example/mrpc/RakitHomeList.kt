@@ -6,10 +6,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mrpc.rakitlist.EditActivity
 import com.example.mrpc.rakitlist.NoteAdapter
+import com.example.mrpc.room.Constant
+import com.example.mrpc.room.Note
 import com.example.mrpc.room.NoteDB
 import kotlinx.android.synthetic.main.rakit_homelist.*
 import kotlinx.coroutines.CoroutineScope
@@ -19,8 +22,8 @@ import kotlinx.coroutines.withContext
 
 class RakitHomeList: AppCompatActivity(){
 
-    val db by lazy { NoteDB(this) }
-    lateinit var noteAdapter: NoteAdapter
+    private val db by lazy { NoteDB(this) }
+    private lateinit var noteAdapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +35,11 @@ class RakitHomeList: AppCompatActivity(){
 
     override fun onStart() {
         super.onStart()
+        loadNote()
+    }
+    private fun loadNote(){
         CoroutineScope(Dispatchers.IO).launch {
-            val note = db.noteDao().getNote()
+            val note = db.noteDao().getNotes()
             Log.d("RakitHomeList","dbResponse: $note")
             withContext(Dispatchers.Main){
                 noteAdapter.setData(note)
@@ -41,18 +47,60 @@ class RakitHomeList: AppCompatActivity(){
         }
     }
 
-        fun setupListener() {
+        private fun setupListener() {
             button_create.setOnClickListener {
-                startActivity(Intent(this, EditActivity::class.java))
+                intentEdit(0,Constant.TYPE_CREATE)
             }
         }
 
+        fun intentEdit(note_id: Int,intent_type: Int){
+            startActivity(
+                Intent(this, EditActivity::class.java)
+                    .putExtra("intent_id", note_id)
+                    .putExtra("intent_type", intent_type)
+            )
+        }
+
         private fun setupRecyclerView() {
-            noteAdapter = NoteAdapter(arrayListOf())
+            noteAdapter = NoteAdapter(arrayListOf(),object: NoteAdapter.OnAdapterListener{
+                override fun onRead(note: Note) {
+                    //read note
+                    intentEdit(note.id,Constant.TYPE_READ)
+                }
+
+                override fun onUpdate(note: Note) {
+                    //edit note
+                    intentEdit(note.id,Constant.TYPE_UPDATE)
+                }
+
+                override fun onDelete(note: Note) {
+                    deleteAlert(note)
+                }
+
+            })
             list_note.apply {
                 layoutManager = LinearLayoutManager(applicationContext)
                 adapter = noteAdapter
             }
+        }
+
+        private fun deleteAlert(note: Note){
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.apply {
+                setTitle("Konfirmasi Hapus")
+                setMessage("Yakin nih mau hapus ${note.title}?")
+                setNegativeButton("Batal") { dialog, which ->
+                    dialog.dismiss()
+                }
+                setPositiveButton("Hapus") { dialog, which ->
+                    dialog.dismiss()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        db.noteDao().deleteNote( note )
+                        loadNote()
+                    }
+                }
+            }
+            alertDialog.show()
         }
 
         //for toolbar
