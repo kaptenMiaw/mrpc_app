@@ -6,20 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vpSlider"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"/>
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:padding="10dp"
+            app:centered="false"
+            app:fillColor="@color/purple_500"
+            app:pageColor="#999999"
+            app:snap="false"/>
 
         <Button
             android:id="@+id/moveTo_rakitHomeList_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rakit"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/rakit" />
+    </LinearLayout>
 
 </FrameLayout>
